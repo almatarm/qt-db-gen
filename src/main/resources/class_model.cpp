@@ -5,7 +5,16 @@ using namespace std;
 ${namespace}::${className}Model::${className}Model(QObject* parent) :
     QAbstractListModel(parent),
     dbMgr_(DatabaseManager::instance()),
+#if( $forignKeys.isEmpty() )
     ${classNameVars}_(dbMgr_.${classDaoVar}.${classNameVars}()) {
+#else
+#foreach( $fk in $forignKeys)
+#set ( $fkName = $Util.toCamelCase($fk.fieldName) + "_" )
+#set ( $fkType = $fk.key.type )
+    ${fkName}(${fk.key.defaultValue}),
+#end
+    ${classNameVars}_(new std::vector<std::unique_ptr<${className}>>()) {
+#end
 }
 
 

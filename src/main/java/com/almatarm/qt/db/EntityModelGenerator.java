@@ -50,6 +50,7 @@ public class EntityModelGenerator {
             context.put("classDaoVar", Util.decapitalizeFirstLetter(entity.getClassName()) + "Dao");
             context.put("classNameVars", Noun.pluralOf(Util.decapitalizeFirstLetter(entity.getClassName())));
             context.put("fields", entity.getFields());
+            context.put("forignKeys", entity.forignKeys);
 
             context.put("export_library", config.export_library);
             context.put("globalHeaderFile", config.globalHeaderFile);
@@ -89,6 +90,7 @@ public class EntityModelGenerator {
             context.put("classDaoVar", Util.decapitalizeFirstLetter(entity.getClassName()) + "Dao");
             context.put("classNameVars", Noun.pluralOf(Util.decapitalizeFirstLetter(entity.getClassName())));
             context.put("fields", entity.getFields());
+            context.put("forignKeys", entity.forignKeys);
 
             context.put("table", entity.table);
             context.put("create_table", sqlite.createTable());

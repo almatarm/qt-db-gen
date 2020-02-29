@@ -33,12 +33,54 @@ public:
     bool removeRows(int row, int count, const QModelIndex& parent) override;
     QHash<int, QByteArray> roleNames() const override;
 
+#foreach( $fk in $forignKeys)
+#set ( $fkName = $Util.toCamelCase($fk.fieldName) )
+#set ( $fkClass = $fk.entity.className )
+    void set${Util.capitalizeFirstLetter($fkName)}(int $fkName);
+    void clear$fkClass();
+#end
+
+#if( !$forignKeys.isEmpty() )
+public slots:
+#foreach( $fk in $forignKeys)
+#set ( $fkClassName = $fk.entity.className )
+#set ( $fkName = $fk.fieldName )
+#set ( $fkType = $fk.key.type )
+#if( $fkName == 'parent_id')
+#set ( $methodPostFix = ${Noun.pluralOf(${className})} )
+#else
+#set ( $methodPostFix = ${Noun.pluralOf(${className})} + 'For' + ${fkClassName} )
+#end
+    void delete${methodPostFix}($fkType $fkName);
+#end
+#end
+
 private:
     bool isIndexValid(const QModelIndex& index) const;
     bool isWritableRole(int role) const;
+#if( !$forignKeys.isEmpty() )
+#foreach( $fk in $forignKeys)
+#set ( $fkClassName = $fk.entity.className )
+#set ( $fkName = $fk.fieldName )
+#set ( $fkType = $fk.key.type )
+#if( $fkName == 'parent_id')
+#set ( $argName = $fkName + ' = ' + ${fk.key.defaultValue})
+#set ( $methodPostFix = ${Noun.pluralOf(${className})} )
+#else
+#set ( $argName = $fkName )
+#set ( $methodPostFix = ${Noun.pluralOf(${className})} + 'For' + ${fkClassName} )
+#end
+    void load${methodPostFix}($fkType $argName);
+#end
+#end
 
 private:
     DatabaseManager& dbMgr_;
+#foreach( $fk in $forignKeys)
+#set ( $fkName = $Util.toCamelCase($fk.fieldName) + "_" )
+#set ( $fkType = $fk.key.type )
+    $fkType $fkName;
+#end
     std::unique_ptr<std::vector<std::unique_ptr<${className}>>> ${classNameVars}_;
 };
 

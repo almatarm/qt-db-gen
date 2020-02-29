@@ -2,8 +2,6 @@ package com.almatarm.qt.db;
 
 import java.util.ArrayList;
 
-import static com.sun.tools.javac.jvm.ByteCodes.ret;
-
 /**
  *
  * @author <a href="mailto:almatarm@gmail.com">Mufeed H. AlMatar</a>
@@ -25,11 +23,26 @@ public class Util {
         return str.substring(0, 1).toLowerCase() + str.substring(1);
     }
 
+    public static String toCamelCase(String str) {
+        String r = str;
+        int idx = -1;
+        while((idx = r.indexOf("_")) != -1 && idx != r.length() -1) {
+            if(idx + 1 < str.length()) {
+                r = r.substring(0, idx) + capitalizeFirstLetter(r.substring(idx + 1));
+            }
+        }
+        return r;
+    }
+
     public static ArrayList<Field> list(Field... fields) {
         ArrayList<Field> f = new ArrayList<>();
         for(Field field: fields) {
             f.add(field);
         }
         return f;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(toCamelCase("parent_id_"));
     }
 }

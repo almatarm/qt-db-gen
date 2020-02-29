@@ -93,6 +93,7 @@ public class Starter {
         label.addConstructor(Util.list(label.getFieldByName("name")), false);
         label.getFieldByName("id").primaryKey = true;
         label.getFieldByName("id").autoincrement = true;
+        label.getFieldByName("name").addRole(Field.Role.display_role);
         entites.add(label);
 
         // Project Entity
@@ -118,6 +119,7 @@ public class Starter {
         project.addConstructor(Util.list(project.getFieldByName("name")), false);
         project.getFieldByName("id").primaryKey = true;
         project.getFieldByName("id").autoincrement = true;
+        project.getFieldByName("name").addRole(Field.Role.display_role);
         entites.add(project);
 
         project.addForignKey(new ForignKey(project, project.getFieldByName("id"), "parent_id"));
@@ -184,6 +186,7 @@ public class Starter {
         task.addConstructor(Util.list(task.getFieldByName("content")), false);
         task.getFieldByName("id").primaryKey = true;
         task.getFieldByName("id").autoincrement = true;
+        task.getFieldByName("content").addRole(Field.Role.display_role);
         entites.add(task);
 
         task.addForignKey(new ForignKey(project, project.getFieldByName("id"), true));
