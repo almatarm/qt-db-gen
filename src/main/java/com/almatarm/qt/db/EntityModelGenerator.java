@@ -99,7 +99,7 @@ public class EntityModelGenerator {
             Velocity.evaluate(context, writer, "", reader);
 
             String output = writer.toString().replaceAll("\n\\s*\n+", "\n\n");
-            System.out.println(output);
+//            System.out.println(output);
             if(Config.write)
                 Files.write(new File(Config.projectDir, entity.getClassName() + "Model.cpp").toPath(), output.getBytes());
         } catch (ParseErrorException | MethodInvocationException | ResourceNotFoundException ex) {

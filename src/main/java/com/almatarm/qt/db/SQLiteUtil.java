@@ -71,8 +71,6 @@ public class SQLiteUtil {
         for(int i = 0; i < entity.getFields().size(); i++) {
             Field field = entity.fields.get(i);
             String col  = field.column != null ? field.column : field.name;
-            System.out.println("field = " + field);
-            System.out.println("col = " + col);
             if(col.toLowerCase().equals("id")) continue;
             buff.append(String.format("\t\t\t\"    %-15s = (:%s)%s\"%n", col, col
                     , (i+1 < entity.getFields().size()? "," : "")));

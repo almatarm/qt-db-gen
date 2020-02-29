@@ -50,6 +50,7 @@ public class EntityDaoSqliteGenerator {
             context.put("fields", entity.getFields());
 
             context.put("isDependent", entity.isDependent());
+            context.put("forignKeys", entity.forignKeys);
             if(entity.isDependent()) {
                 ForignKey fk = entity.getDependentKey();
                 context.put("fkClassName", fk.getEntity().getClassName());
@@ -98,11 +99,13 @@ public class EntityDaoSqliteGenerator {
             context.put("update_statement", sqlite.updateStatement());
             context.put("insert_statement", sqlite.insertStatement());
 
+            context.put("forignKeys", entity.forignKeys);
+
             StringWriter writer = new StringWriter();
             Velocity.evaluate(context, writer, "", reader);
 
             String output = writer.toString().replaceAll("\n\\s*\n+", "\n\n");
-            System.out.println(output);
+//            System.out.println(output);
             if(Config.write)
                 Files.write(new File(Config.projectDir, entity.getClassName() + "Dao.cpp").toPath(), output.getBytes());
         } catch (ParseErrorException | MethodInvocationException | ResourceNotFoundException ex) {

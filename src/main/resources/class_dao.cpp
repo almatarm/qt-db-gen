@@ -70,3 +70,44 @@ unique_ptr<vector<unique_ptr<${namespace}::${className}>>> ${namespace}::${class
     }
     return list;
 }
+#if( !$forignKeys.isEmpty() )
+#foreach( $fk in $forignKeys)
+#set ( $fkClassName = $fk.entity.className )
+#set ( $fkName = $fk.fieldName )
+#set ( $fkType = $fk.key.type )
+
+#if( $fkName == 'parent_id')
+#set ( $argName = ${classNameVar} + '_id' )
+#set ( $methodPostFix = ${classNameVar} + 'Children' )
+#else
+#set ( $argName = $fkName )
+#set ( $methodPostFix = ${Noun.pluralOf(${className})} + 'For' + ${fkClassName} )
+#end
+
+void ${namespace}::${className}Dao::remove${Util.capitalizeFirstLetter($methodPostFix)}($fkType $argName) const {
+    QSqlQuery query(database_);
+    query.prepare("DELETE FROM $table WHERE $fkName = (:$argName)");
+    query.bindValue(":$argName", $argName);
+    query.exec();
+    DatabaseManager::debugQuery(query);
+}
+
+std::unique_ptr<std::vector<std::unique_ptr<${namespace}::${className}>>> ${namespace}::${className}Dao::${Util.decapitalizeFirstLetter($methodPostFix)}($fkType $argName) const {
+    QSqlQuery query(database_);
+    query.prepare("SELECT * FROM $table WHERE $fkName = (:$argName)");
+    query.bindValue(":$argName", $argName);
+    query.exec();
+    DatabaseManager::debugQuery(query);
+    unique_ptr<std::vector<std::unique_ptr<${className}>>> list(new vector<unique_ptr<${className}>>());
+    while(query.next()) {
+        unique_ptr<${className}> ${classNameVar}(new ${className}());
+#foreach( $field in $fields)
+        $field.qVariantConvertor(${classNameVar})
+#end
+        list->push_back(move(${classNameVar}));
+    }
+    return list;
+}
+
+#end
+#end
