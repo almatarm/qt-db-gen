@@ -100,6 +100,36 @@ QHash<int, QByteArray> ${namespace}::${className}Model::roleNames() const
     return roles;
 }
 
+#foreach( $fk in $forignKeys)
+#set ( $fkName = $Util.toCamelCase($fk.fieldName) )
+#set ( $fkClass = $fk.entity.className )
+void ${namespace}::${className}Model::set${Util.capitalizeFirstLetter($fkName)}(int $fkName) {
+
+}
+
+void ${namespace}::${className}Model::clear$fkClass() {
+
+}
+
+#end
+
+#if( !$forignKeys.isEmpty() )
+#foreach( $fk in $forignKeys)
+#set ( $fkClassName = $fk.entity.className )
+#set ( $fkName = $fk.fieldName )
+#set ( $fkType = $fk.key.type )
+#if( $fkName == 'parent_id')
+#set ( $methodPostFix = ${Noun.pluralOf(${className})} )
+#else
+#set ( $methodPostFix = ${Noun.pluralOf(${className})} + 'For' + ${fkClassName} )
+#end
+void ${namespace}::${className}Model::delete${methodPostFix}($fkType $fkName) {
+
+}
+
+#end
+#end
+
 bool ${namespace}::${className}Model::isIndexValid(const QModelIndex &index) const
 {
     if (index.row() < 0
@@ -114,3 +144,21 @@ bool ${namespace}::${className}Model::isWritableRole(int role) const
 {
     return ${entity.getWritableFields()}
 }
+
+#if( !$forignKeys.isEmpty() )
+#foreach( $fk in $forignKeys)
+#set ( $fkClassName = $fk.entity.className )
+#set ( $fkName = $fk.fieldName )
+#set ( $fkType = $fk.key.type )
+#if( $fkName == 'parent_id')
+#set ( $methodPostFix = ${Noun.pluralOf(${className})} )
+#else
+#set ( $methodPostFix = ${Noun.pluralOf(${className})} + 'For' + ${fkClassName} )
+#end
+void ${namespace}::${className}Model::load${methodPostFix}($fkType $fkName)
+{
+
+}
+
+#end
+#end
