@@ -101,14 +101,24 @@ QHash<int, QByteArray> ${namespace}::${className}Model::roleNames() const
 }
 
 #foreach( $fk in $forignKeys)
+#set ( $fkClassName = $fk.entity.className )
 #set ( $fkName = $Util.toCamelCase($fk.fieldName) )
 #set ( $fkClass = $fk.entity.className )
-void ${namespace}::${className}Model::set${Util.capitalizeFirstLetter($fkName)}(int $fkName) {
+#if( $fk.fieldName == 'parent_id')
+#set ( $loadObjects = ${Noun.pluralOf(${className})} )
+#else
+#set ( $loadObjects = ${Noun.pluralOf(${className})} + 'For' + ${fkClassName} )
+#end
 
+void ${namespace}::${className}Model::set${Util.capitalizeFirstLetter($fkName)}(int $fkName) {
+    beginResetModel();
+    ${fkName}_ = $fkName;
+    load${loadObjects}($fkName);
+    endResetModel();
 }
 
 void ${namespace}::${className}Model::clear$fkClass() {
-
+    set${Util.capitalizeFirstLetter($fkName)}($fk.key.defaultValue);
 }
 
 #end
@@ -116,15 +126,18 @@ void ${namespace}::${className}Model::clear$fkClass() {
 #if( !$forignKeys.isEmpty() )
 #foreach( $fk in $forignKeys)
 #set ( $fkClassName = $fk.entity.className )
-#set ( $fkName = $fk.fieldName )
+#set ( $fkName = $Util.toCamelCase($fk.fieldName) )
 #set ( $fkType = $fk.key.type )
-#if( $fkName == 'parent_id')
+#if( $fk.fieldName == 'parent_id')
 #set ( $methodPostFix = ${Noun.pluralOf(${className})} )
+#set ( $daoMethod =  ${Util.capitalizeFirstLetter(${classNameVar})} + 'Children' )
 #else
 #set ( $methodPostFix = ${Noun.pluralOf(${className})} + 'For' + ${fkClassName} )
+#set ( $daoMethod = $methodPostFix )
 #end
 void ${namespace}::${className}Model::delete${methodPostFix}($fkType $fkName) {
-
+    dbMgr_.${classNameVar}Dao.remove${daoMethod}($fkName);
+    clear${fkClass}();
 }
 
 #end
@@ -148,16 +161,22 @@ bool ${namespace}::${className}Model::isWritableRole(int role) const
 #if( !$forignKeys.isEmpty() )
 #foreach( $fk in $forignKeys)
 #set ( $fkClassName = $fk.entity.className )
-#set ( $fkName = $fk.fieldName )
+#set ( $fkName = $Util.toCamelCase($fk.fieldName) )
 #set ( $fkType = $fk.key.type )
-#if( $fkName == 'parent_id')
+#if( $fk.fieldName == 'parent_id')
 #set ( $methodPostFix = ${Noun.pluralOf(${className})} )
+#set ( $daoMethod =  ${classNameVar} + 'Children' )
 #else
 #set ( $methodPostFix = ${Noun.pluralOf(${className})} + 'For' + ${fkClassName} )
+#set ( $daoMethod = ${Util.decapitalizeFirstLetter($methodPostFix)} )
 #end
 void ${namespace}::${className}Model::load${methodPostFix}($fkType $fkName)
 {
-
+    if ($fkName <= 0) {
+        ${classNameVars}_.reset(new vector<unique_ptr<$className>>());
+        return;
+    }
+    ${classNameVars}_ = dbMgr_.${classNameVar}Dao.${daoMethod}($fkName);
 }
 
 #end

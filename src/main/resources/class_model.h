@@ -44,9 +44,9 @@ public:
 public slots:
 #foreach( $fk in $forignKeys)
 #set ( $fkClassName = $fk.entity.className )
-#set ( $fkName = $fk.fieldName )
+#set ( $fkName = $Util.toCamelCase($fk.fieldName) )
 #set ( $fkType = $fk.key.type )
-#if( $fkName == 'parent_id')
+#if( $fk.fieldName == 'parent_id')
 #set ( $methodPostFix = ${Noun.pluralOf(${className})} )
 #else
 #set ( $methodPostFix = ${Noun.pluralOf(${className})} + 'For' + ${fkClassName} )
@@ -61,9 +61,9 @@ private:
 #if( !$forignKeys.isEmpty() )
 #foreach( $fk in $forignKeys)
 #set ( $fkClassName = $fk.entity.className )
-#set ( $fkName = $fk.fieldName )
+#set ( $fkName = $Util.toCamelCase($fk.fieldName) )
 #set ( $fkType = $fk.key.type )
-#if( $fkName == 'parent_id')
+#if( $fk.fieldName == 'parent_id')
 #set ( $argName = $fkName + ' = ' + ${fk.key.defaultValue})
 #set ( $methodPostFix = ${Noun.pluralOf(${className})} )
 #else
