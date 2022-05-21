@@ -59,6 +59,153 @@ public class Starter {
     }
 
 
+    public static void exevda() throws IOException {
+        Config.projectDir       = new File("/Users/almatarm/projects/codex/qt/Todo/todo-core");
+        Config.write            = true;
+        Config.namespace        = "exevda_core";
+        Config.export_library   = "EXEVDA_EXPORT";
+        Config.globalHeaderFile = "exevda-core_global.h";
+
+        ArrayList<Entity> entites = new ArrayList<>();
+
+        Config.projectDir       = new File("/Users/almatarm/tmp/qt/Todo/todo-core");
+
+        //User Entity
+//        Entity user = new Entity("User");
+//        user.addField(new Field("id", "int", true, true, "-1"));
+//        user.addField(new Field("username", "QString", true, true, "\"\""));
+//        user.addField(new Field("first_name", "QString", true, true, "\"\""));
+//        user.addConstructor(Util.list(user.getFieldByName("username")), false);
+//        user.getFieldByName("id").primaryKey = true;
+//        user.getFieldByName("id").autoincrement = true;
+//        entites.add(user);
+
+        //Label Entity
+//            "id": 790748,
+//            "name": "Label1",
+//            "color": 30,
+//            "item_order": 0,
+//            "is_deleted": 0,
+//            "is_favorite": 0
+        Entity label = new Entity("Label");
+        label.addField(new Field("id", "int", true, true, "-1"));
+        label.addField(new Field("name", "QString", true, true, "\"\""));
+        label.addField(new Field("color", "int", true, true, "1"));
+        label.addField(new Field("position", "int", true, true, "-1"));
+        label.addConstructor(Util.list(label.getFieldByName("name")), false);
+        label.getFieldByName("id").primaryKey = true;
+        label.getFieldByName("id").autoincrement = true;
+        label.getFieldByName("name").addRole(Field.Role.display_role);
+        entites.add(label);
+
+        // Project Entity
+//            "id": 396936926,
+//            "name": "Project1",
+//            "color": 30,
+//            "parent_id": null,
+//            "child_order": 1,
+//            "collapsed": 0,
+//            "shared": false,
+//            "parent_id": null,
+//            "legacy_parent_id": null,
+//            "is_deleted": 0,
+//            "is_archived": 0,
+//            "is_favorite": 0
+        Entity project = new Entity("Project");
+        project.addField(new Field("id", "int", true, true, "-1"));
+        project.addField(new Field("name", "QString", true, true, "\"\""));
+        project.addField(new Field("emoji", "QString", true, true, "\"\""));
+        project.addField(new Field("color", "int", true, true, "1"));
+        project.addField(new Field("collapsed", "bool", true, true, "false"));
+//        project.addField(new Field("archived", "bool", true, true, "false"));
+        project.addField(new Field("position", "int", true, true, "-1"));
+        project.addConstructor(Util.list(project.getFieldByName("name")), false);
+        project.getFieldByName("id").primaryKey = true;
+        project.getFieldByName("id").autoincrement = true;
+        project.getFieldByName("name").addRole(Field.Role.display_role);
+        entites.add(project);
+
+        project.addForignKey(new ForignKey(project, project.getFieldByName("id"), "parent_id"));
+
+
+//        //Group Entity
+//        Entity group = new Entity("Group");
+//        group.addField(new Field("id", "int", true, true, "-1"));
+//        group.addField(new Field("name", "QString", true, true, "\"\""));
+//        group.addField(new Field("color", "int", true, true, "1"));
+//        group.addField(new Field("type", "int", true, true, "-1"));
+//        group.addConstructor(Util.list(group.getFieldByName("name")), false);
+//        group.getFieldByName("id").primaryKey = true;
+//        group.getFieldByName("id").autoincrement = true;
+//        entites.add(group);
+//
+//        //GroupItems Entity
+//        Entity groupItems = new Entity("GroupItems");
+//        groupItems.addField(new Field("group_id", "int", true, true, "-1"));
+//        groupItems.addField(new Field("item_id", "int", true, true, "-1"));
+//        groupItems.addField(new Field("order", "int", true, true, "-1"));
+//        entites.add(groupItems);
+
+
+//        //Label Entity
+//        Entity note = new Entity("Label");
+//        note.addField(new Field("id", "int", true, true, "-1"));
+//        note.addField(new Field("name", "QString", true, true, "\"\""));
+//        note.addField(new Field("color", "int", true, true, "1"));
+//        note.addField(new Field("order", "int", true, true, "-1"));
+//        note.addConstructor(Util.list(note.getFieldByName("name")), false);
+//        note.getFieldByName("id").primaryKey = true;
+//        note.getFieldByName("id").autoincrement = true;
+//        entites.add(note);
+
+        //Task Entity
+//        "id": 301946961,
+//        "user_id": 1855589,
+//        "project_id": 396936926,
+//        "content": "Task1",
+//        "priority": 1,
+//        "due": null,
+//        "parent_id": null,
+//        "child_order": 1,
+//        "section_id": null,
+//        "day_order": -1,
+//        "collapsed": 0,
+//        "children": null,
+//        "labels": [12839231, 18391839],
+//        "added_by_uid": 1855589,
+//        "assigned_by_uid": 1855589,
+//        "responsible_uid": null,
+//        "checked": 0,
+//        "in_history": 0,
+//        "is_deleted": 0,
+//        "sync_id": null,
+//        "date_added": "2014-09-26T08:25:05Z"
+        Entity task = new Entity("Task");
+        task.addField(new Field("id", "int", true, true, "-1"));
+        task.addField(new Field("emoji", "QString", true, true, "\"\""));
+        task.addField(new Field("content", "QString", true, true, "\"\""));
+        task.addField(new Field("color", "int", true, true, "1"));
+        task.addField(new Field("position", "int", true, true, "-1"));
+        task.addConstructor(Util.list(task.getFieldByName("content")), false);
+        task.getFieldByName("id").primaryKey = true;
+        task.getFieldByName("id").autoincrement = true;
+        task.getFieldByName("content").addRole(Field.Role.display_role);
+        entites.add(task);
+
+        task.addForignKey(new ForignKey(project, project.getFieldByName("id"), true));
+        task.addForignKey(new ForignKey(task, task.getFieldByName("id"), "parent_id"));
+
+        EntityGenerator entitiyGenerator = new EntityGenerator(entites);
+        EntityDaoSqliteGenerator entitiyDaoGenerator = new EntityDaoSqliteGenerator(entites);
+        EntityModelGenerator entityModelGenerator = new EntityModelGenerator(entites);
+        SqlDBGenerator sqlDbGenerator = new SqlDBGenerator(entites);
+
+        entitiyGenerator.process();
+        entitiyDaoGenerator.process();
+        entityModelGenerator.process();
+        sqlDbGenerator.process();
+    }
+
     public static void todo() throws IOException {
         Config.projectDir       = new File("/Users/almatarm/projects/code/qt/Todo/todo-core");
         Config.write            = true;
@@ -67,6 +214,8 @@ public class Starter {
         Config.globalHeaderFile = "todo-core_global.h";
 
         ArrayList<Entity> entites = new ArrayList<>();
+
+        Config.projectDir       = new File("/Users/almatarm/tmp/qt/Todo/todo-core");
 
 //        //User Entity
 //        Entity user = new Entity("User");
@@ -116,6 +265,7 @@ public class Starter {
         project.addField(new Field("color", "int", true, true, "1"));
         project.addField(new Field("collapsed", "bool", true, true, "false"));
 //        project.addField(new Field("archived", "bool", true, true, "false"));
+        project.addField(new Field("position", "int", true, true, "-1"));
         project.addConstructor(Util.list(project.getFieldByName("name")), false);
         project.getFieldByName("id").primaryKey = true;
         project.getFieldByName("id").autoincrement = true;

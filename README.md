@@ -1,1 +1,5 @@
-# qt-db-gen
+### qt-db-gen
+Generate Qt Database Application
+
+### Start Here
+com.almatarm.qt.db.Starter
